@@ -30,7 +30,7 @@ class CreateTitleView extends StatelessWidget {
               BaseButton(
                   buttonText: '次へ',
                   onPressed: () {
-                    Navigator.pushNamed(context, Routes.init, arguments: true);
+                    Navigator.pushNamed(context, Routes.guideHome, arguments: true);
                   }),
             ],
           ),
