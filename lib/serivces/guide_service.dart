@@ -10,7 +10,8 @@ class GuideService {
         snapshot.docs.map((doc) => Guide.fromMap(doc.data(), doc.id)).toList());
   }
 
-  Future<void> addGuide(Guide guide) {
-    return db.add(guide.toMap());
+  Future<String> addGuide(Guide guide) async {
+    DocumentReference ref = await db.add(guide.toMap());
+    return ref.id;
   }
 }

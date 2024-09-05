@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ListData {
-  final TextEditingController nameController;
+  final TextEditingController titleController;
   final TextEditingController descriptionController;
 
   ListData({
-    required this.nameController,
+    required this.titleController,
     required this.descriptionController,
   });
 }

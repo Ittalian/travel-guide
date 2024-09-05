@@ -13,4 +13,8 @@ class GuideScheduleRepository {
   Future<void> addSchdule(GuideSchedule schedule) {
     return guideScheduleService.addSchedule(schedule);
   }
+
+  Stream<List<GuideSchedule>> getSchedulesByGuideId(String guideId) {
+    return guideScheduleService.getSchedulesByGuideId(guideId);
+  }
 }

@@ -1,12 +1,12 @@
 class GuideSchedule {
-  final String scheduleId;
+  final String? scheduleId;
   final String guideId;
-  final String scheduleDate;
+  final num scheduleDate;
   final String eventDate;
   final String description;
 
   GuideSchedule({
-    required this.scheduleId,
+    this.scheduleId,
     required this.guideId,
     required this.scheduleDate,
     required this.eventDate,

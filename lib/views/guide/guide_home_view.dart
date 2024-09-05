@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:travel_guide/views/guide/guide_init_view.dart';
-import 'package:travel_guide/views/guide/guide_schedule_view.dart';
+import 'package:provider/provider.dart';
+import 'package:travel_guide/config/routes.dart';
+import 'package:travel_guide/view_models/guide_schedule_view_model.dart';
+import 'package:travel_guide/widget/base/base_button.dart';
+import 'package:travel_guide/widget/base/base_image_container.dart';
+import 'package:travel_guide/widget/guide_schedule/schedule_container.dart';
 
 class GuideHomeView extends StatefulWidget {
   final bool isFirstPage;
-  const GuideHomeView({super.key, required this.isFirstPage});
+  final String guideId;
+  const GuideHomeView(
+      {super.key, required this.isFirstPage, required this.guideId});
 
   @override
   GuideHomeViewState createState() => GuideHomeViewState();
 }
 
 class GuideHomeViewState extends State<GuideHomeView> {
+  String imagePath = 'images/init_background.jpg';
   late PageController pageController;
-  List<Widget> pages = [];
   int currentPage = 0;
 
   @override
   void initState() {
     super.initState();
     pageController = PageController(initialPage: 0);
-    pages.add(buildHomePage());
-    addSchedulePage();
   }
 
   @override
@@ -29,27 +33,15 @@ class GuideHomeViewState extends State<GuideHomeView> {
     super.dispose();
   }
 
-  Widget buildHomePage() {
-    return GuideInitView(
-        isFirstPage: true,
-        addSchedulePage: () {
-          addSchedulePage();
-          navigateToFirstPage();
-        });
+  void moveSchedulePage() {
+    Navigator.pushNamed(context, Routes.schedule, arguments: widget.guideId);
   }
 
-  void addSchedulePage() {
-    setState(() {
-      pages.insert(0, const GuideScheduleView());
-    });
+  void moveListPage() {
+    Navigator.pushNamed(context, Routes.list, arguments: widget.guideId);
   }
 
-  // void _addListPage() {
-  //   setState(() {
-  //     pages.add(const GuideListView());
-  //     navigateToFirstPage();
-  //   });
-  // }
+  void saveGuide() {}
 
   void navigateToFirstPage() {
     pageController.animateToPage(
@@ -61,16 +53,50 @@ class GuideHomeViewState extends State<GuideHomeView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageView(
-        controller: pageController,
-        children: pages,
-        onPageChanged: (index) {
-          setState(() {
-            currentPage = index;
-          });
-        },
-      ),
-    );
+    final guideScheduleViewModel = context.watch<GuideScheduleViewModel>();
+    guideScheduleViewModel.fetchSchedules(widget.guideId);
+    return BaseImageContainer(
+        imagePath: imagePath,
+        child: Scaffold(
+            backgroundColor: Colors.white.withOpacity(0),
+            body: PageView(
+              children: [
+                Consumer<GuideScheduleViewModel>(
+                  builder: (context, viewModel, child) {
+                    if (viewModel.schedules.isEmpty) {
+                      return const Center(
+                          child: Text('No schedules available'));
+                    }
+                    return PageView.builder(
+                      itemCount: viewModel.schedules.length,
+                      itemBuilder: (context, index) {
+                        final schedule = viewModel.schedules[index];
+                        TextEditingController detailController =
+                            TextEditingController(text: schedule.description);
+                        TextEditingController dateController =
+                            TextEditingController(text: schedule.eventDate);
+                        return ScheduleContainer(
+                            detailController: detailController,
+                            dateController: dateController);
+                      },
+                    );
+                  },
+                ),
+                Container(
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        BaseButton(
+                            buttonText: 'スケジュール', onPressed: moveSchedulePage),
+                        const Padding(padding: EdgeInsets.only(top: 10)),
+                        BaseButton(buttonText: 'リスト', onPressed: moveListPage),
+                        const Padding(padding: EdgeInsets.only(top: 10)),
+                        if (!widget.isFirstPage)
+                          BaseButton(buttonText: '保存', onPressed: saveGuide)
+                      ],
+                    ))
+              ],
+            )));
   }
 }

@@ -3,14 +3,23 @@ import 'package:travel_guide/widget/base/base_button.dart';
 import 'package:travel_guide/widget/base/base_image_container.dart';
 
 class GuideInitView extends StatelessWidget {
-  final bool isFirstPage;
   final Function() addSchedulePage;
-  const GuideInitView({super.key, required this.isFirstPage, required this.addSchedulePage});
+  final Function() addListPage;
+  final Function() saveGuide;
+  final String imagePath;
+  final bool isFirstPage;
+  const GuideInitView(
+      {super.key,
+      required this.isFirstPage,
+      required this.addSchedulePage,
+      required this.addListPage,
+      required this.saveGuide,
+      required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
     return BaseImageContainer(
-        imagePath: 'images/init_background.jpg',
+        imagePath: imagePath,
         child: Scaffold(
             backgroundColor: Colors.white.withOpacity(0),
             body: Container(
@@ -19,17 +28,12 @@ class GuideInitView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     BaseButton(
-                        buttonText: 'スケジュール',
-                        onPressed: addSchedulePage
-                        //  () {
-                        //   Navigator.pushNamed(context, Routes.schedule);
-                        // }
-                        ),
+                        buttonText: 'スケジュール', onPressed: addSchedulePage),
                     const Padding(padding: EdgeInsets.only(top: 10)),
-                    BaseButton(buttonText: 'リスト', onPressed: () {}),
+                    BaseButton(buttonText: 'リスト', onPressed: addListPage),
                     const Padding(padding: EdgeInsets.only(top: 10)),
                     if (!isFirstPage)
-                      BaseButton(buttonText: '保存', onPressed: () {})
+                      BaseButton(buttonText: '保存', onPressed: saveGuide)
                   ],
                 ))));
   }

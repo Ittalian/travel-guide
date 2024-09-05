@@ -62,6 +62,7 @@ class ScheduleContainerState extends State<ScheduleContainer> {
                   child: BaseTextformfield(
                       controller: widget.detailController,
                       labelText: '詳細',
+                      isCenter: false,
                       color: const Color.fromARGB(255, 220, 162, 162),
                       onChanged: (value) {
                         setState(() {

@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_guide/config/routes.dart';
+import 'package:travel_guide/repositories/guide_list_repository.dart';
 import 'package:travel_guide/repositories/guide_repository.dart';
+import 'package:travel_guide/repositories/guide_schedule_repository.dart';
+import 'package:travel_guide/serivces/guide_list_service.dart';
+import 'package:travel_guide/serivces/guide_schedule_service.dart';
 import 'package:travel_guide/serivces/guide_service.dart';
+import 'package:travel_guide/view_models/guide_list_view_model.dart';
+import 'package:travel_guide/view_models/guide_schedule_view_model.dart';
 import 'package:travel_guide/view_models/guide_view_model.dart';
 import 'config/firebase_options.dart';
 
@@ -24,6 +30,12 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
             create: (_) => GuideViewModel(GuideRepository(GuideService()))),
+        ChangeNotifierProvider(
+            create: (_) => GuideScheduleViewModel(
+                GuideScheduleRepository(GuideScheduleService()))),
+        ChangeNotifierProvider(
+            create: (_) =>
+                GuideListViewModel(GuideListRepository(GuideListService()))),
       ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,

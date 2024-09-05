@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travel_guide/views/guide/create_title_view.dart';
 import 'package:travel_guide/views/guide/guide_home_view.dart';
+import 'package:travel_guide/views/guide/guide_list_view.dart';
 import 'package:travel_guide/views/guide/guide_schedule_view.dart';
 import 'package:travel_guide/views/home/home.dart';
 
@@ -18,11 +19,17 @@ class Routes {
       case createTitle:
         return MaterialPageRoute(builder: (_) => const CreateTitleView());
       case guideHome:
-        final isFirstPage = settings.arguments;
+        final guideOption = settings.arguments as Map;
         return MaterialPageRoute(
-            builder: (_) => GuideHomeView(isFirstPage: isFirstPage as bool));
+            builder: (_) => GuideHomeView(
+                isFirstPage: guideOption['isFirstPage'] as bool,
+                guideId: guideOption['guideId'] as String));
       case schedule:
-        return MaterialPageRoute(builder: (_) => const GuideScheduleView());
+        final guideId = settings.arguments as String;
+        return MaterialPageRoute(builder: (_) => GuideScheduleView(guideId: guideId));
+      case list:
+        final guideId = settings.arguments as String;
+        return MaterialPageRoute(builder: (_) => GuideListView(guideId: guideId));
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

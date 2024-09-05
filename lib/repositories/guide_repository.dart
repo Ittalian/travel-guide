@@ -10,7 +10,7 @@ class GuideRepository {
     return guideService.getGuides();
   }
 
-  Future<void> addGuide(Guide guide) {
+  Future<String> addGuide(Guide guide) {
     return guideService.addGuide(guide);
   }
 }

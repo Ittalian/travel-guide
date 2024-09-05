@@ -1,9 +1,9 @@
 class Guide {
-  final String guideId;
+  final String? guideId;
   final String title;
 
   Guide({
-    required this.guideId,
+    this.guideId,
     required this.title,
   });
 

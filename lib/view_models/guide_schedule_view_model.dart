@@ -8,12 +8,12 @@ class GuideScheduleViewModel extends ChangeNotifier {
   List<GuideSchedule> _schedules = [];
   List<GuideSchedule> get schedules => _schedules;
 
-  GuideScheduleViewModel(this.guideScheduleRepository) {
-    fetchSchedules();
-  }
+  GuideScheduleViewModel(this.guideScheduleRepository);
 
-  void fetchSchedules() {
-    guideScheduleRepository.getSchedule().listen((scheduleList) {
+  void fetchSchedules(String guideId) {
+    guideScheduleRepository
+        .getSchedulesByGuideId(guideId)
+        .listen((scheduleList) {
       _schedules = scheduleList;
       notifyListeners();
     });

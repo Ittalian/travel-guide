@@ -1,26 +1,30 @@
 class GuideList {
-  String listId;
-  String title;
+  String? listId;
   String guideId;
+  String title;
+  String description;
 
   GuideList({
-    required this.listId,
-    required this.title,
+    this.listId,
     required this.guideId,
+    required this.title,
+    required this.description,
   });
 
   factory GuideList.fromMap(Map<String, dynamic> listMap, String documentId) {
     return GuideList(
       listId: documentId,
-      title: listMap['title'] ?? '',
       guideId: listMap['guide_id'] ?? '',
+      title: listMap['title'] ?? '',
+      description: listMap['description'] ?? '',
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'title': title,
       'guide_id': guideId,
+      'title': title,
+      'description': description,
     };
   }
 }

@@ -11,6 +11,13 @@ class GuideScheduleService {
   }
 
   Future<void> addSchedule(GuideSchedule schedule) {
-    return db.add(schedule.toMap());
+    return db.add(schedule.toMap()).then((ref) => ref.id);
+  }
+
+  Stream<List<GuideSchedule>> getSchedulesByGuideId(String guideId) {
+    return db.where('guide_id', isEqualTo: guideId).snapshots().map(
+        (snapshot) => snapshot.docs
+            .map((doc) => GuideSchedule.fromMap(doc.data(), doc.id))
+            .toList());
   }
 }

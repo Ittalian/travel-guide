@@ -20,7 +20,7 @@ class GuideViewModel extends ChangeNotifier {
     });
   }
 
-  Future<void> addGuide(Guide guide) async {
-    await guideRepository.addGuide(guide);
+  Future<String> addGuide(Guide guide) async {
+    return await guideRepository.addGuide(guide);
   }
 }

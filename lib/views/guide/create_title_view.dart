@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:travel_guide/config/routes.dart';
+import 'package:travel_guide/models/guide.dart';
+import 'package:travel_guide/view_models/guide_view_model.dart';
 import 'package:travel_guide/widget/base/base_button.dart';
 import 'package:travel_guide/widget/base/base_image_container.dart';
 import 'package:travel_guide/widget/base/base_textformfield.dart';
@@ -9,6 +12,7 @@ class CreateTitleView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final guideViewModel = context.watch<GuideViewModel>();
     final TextEditingController titleController = TextEditingController();
     return BaseImageContainer(
         imagePath: 'images/create_title_background.jpg',
@@ -30,8 +34,13 @@ class CreateTitleView extends StatelessWidget {
               const Padding(padding: EdgeInsets.only(top: 50)),
               BaseButton(
                   buttonText: '次へ',
-                  onPressed: () {
-                    Navigator.pushNamed(context, Routes.guideHome, arguments: true);
+                  onPressed: () async {
+                    Guide guide = Guide(title: titleController.text);
+                    String guideId = await guideViewModel.addGuide(guide);
+                    Navigator.pushNamed(context, Routes.guideHome, arguments: {
+                      'isFirstPage': true,
+                      'guideId': guideId,
+                    });
                   }),
             ],
           ),
