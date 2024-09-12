@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_guide/config/routes.dart';
+import 'package:travel_guide/view_models/guide_list_view_model.dart';
 import 'package:travel_guide/view_models/guide_schedule_view_model.dart';
+import 'package:travel_guide/views/browse/guide_schedule_browse.dart';
+import 'package:travel_guide/views/guide/guide_list_view.dart';
 import 'package:travel_guide/widget/base/base_button.dart';
 import 'package:travel_guide/widget/base/base_image_container.dart';
-import 'package:travel_guide/widget/guide_schedule/schedule_container.dart';
 
 class GuideHomeView extends StatefulWidget {
   final bool isFirstPage;
@@ -54,7 +56,9 @@ class GuideHomeViewState extends State<GuideHomeView> {
   @override
   Widget build(BuildContext context) {
     final guideScheduleViewModel = context.watch<GuideScheduleViewModel>();
+    final guideListViewModel = context.watch<GuideListViewModel>();
     guideScheduleViewModel.fetchSchedules(widget.guideId);
+    guideListViewModel.fetchLists(widget.guideId);
     return BaseImageContainer(
         imagePath: imagePath,
         child: Scaffold(
@@ -67,17 +71,19 @@ class GuideHomeViewState extends State<GuideHomeView> {
                       return const Center(
                           child: Text('No schedules available'));
                     }
+                    return GuideScheduleBrowse(guideId: widget.guideId);
+                  },
+                ),
+                Consumer<GuideListViewModel>(
+                  builder: (context, viewModel, child) {
+                    if (viewModel.lists.isEmpty) {
+                      return const Center(
+                          child: Text('No schedules available'));
+                    }
                     return PageView.builder(
-                      itemCount: viewModel.schedules.length,
+                      itemCount: viewModel.lists.length,
                       itemBuilder: (context, index) {
-                        final schedule = viewModel.schedules[index];
-                        TextEditingController detailController =
-                            TextEditingController(text: schedule.description);
-                        TextEditingController dateController =
-                            TextEditingController(text: schedule.eventDate);
-                        return ScheduleContainer(
-                            detailController: detailController,
-                            dateController: dateController);
+                        return GuideListView(guideId: widget.guideId);
                       },
                     );
                   },

@@ -31,6 +31,7 @@ class GuideScheduleViewState extends State<GuideScheduleView> {
     final container = ScheduleContainer(
       detailController: detailController,
       dateController: dateController,
+      isBrowseMode: false,
     );
 
     setState(() {
@@ -68,10 +69,10 @@ class GuideScheduleViewState extends State<GuideScheduleView> {
                               GuideSchedule schedule = GuideSchedule(
                                   guideId: widget.guideId,
                                   scheduleDate: scheduleDate,
-                                  eventDate:
-                                      scheduleContainer.container.dateController.text,
+                                  eventDate: scheduleContainer
+                                      .container.dateController!.text,
                                   description: scheduleContainer
-                                      .container.detailController.text);
+                                      .container.detailController!.text);
                               scheduleViewModel.addSchedule(schedule);
                             }
                             Navigator.pushNamed(

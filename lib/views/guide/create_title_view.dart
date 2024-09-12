@@ -29,7 +29,7 @@ class CreateTitleView extends StatelessWidget {
                     controller: titleController,
                     labelText: 'タイトルを入力してください',
                     isCenter: false,
-                    onChanged: (value) => titleController.text = value),
+                ),
               ),
               const Padding(padding: EdgeInsets.only(top: 50)),
               BaseButton(

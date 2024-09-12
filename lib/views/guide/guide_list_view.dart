@@ -18,10 +18,6 @@ class GuideListView extends StatefulWidget {
 class GuideListViewState extends State<GuideListView> {
   final List<ListData> listContainers = [];
 
-  void getListContainers() {
-    print(listContainers);
-  }
-
   @override
   void initState() {
     super.initState();
@@ -92,7 +88,10 @@ class GuideListViewState extends State<GuideListView> {
                         Navigator.pushNamed(
                           context,
                           Routes.guideHome,
-                          arguments: false,
+                          arguments: {
+                            'isFirstPage': false,
+                            'guideId': widget.guideId,
+                          },
                         );
                       },
                       child: const Text('保存'))),

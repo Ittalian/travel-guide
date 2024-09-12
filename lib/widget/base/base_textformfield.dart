@@ -7,7 +7,6 @@ class BaseTextformfield extends StatelessWidget {
   final Color? color;
   final bool isCenter;
   final String? Function(String?)? validator;
-  final void Function(String)? onChanged;
 
   const BaseTextformfield(
       {super.key,
@@ -17,7 +16,7 @@ class BaseTextformfield extends StatelessWidget {
       this.fontSize,
       this.color,
       this.validator,
-      this.onChanged});
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,6 @@ class BaseTextformfield extends StatelessWidget {
         fillColor: color,
       ),
       validator: validator,
-      onChanged: onChanged,
       autovalidateMode: AutovalidateMode.onUserInteraction,
     );
   }

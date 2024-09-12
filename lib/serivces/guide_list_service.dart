@@ -11,6 +11,13 @@ class GuideListService {
   }
 
   Future<void> addList(GuideList list) {
-    return db.add(list.toMap());
+    return db.add(list.toMap()).then((ref) => ref.id);
+  }
+
+  Stream<List<GuideList>> getListsByGuideId(String guideId) {
+    return db.where('guide_id', isEqualTo: guideId).snapshots().map(
+        (snapshot) => snapshot.docs
+            .map((doc) => GuideList.fromMap(doc.data(), doc.id))
+            .toList());
   }
 }

@@ -13,4 +13,8 @@ class GuideListRepository {
   Future<void> addList(GuideList list) {
     return guideListService.addList(list);
   }
+
+  Stream<List<GuideList>> getSchedulesByGuideId(String guideId) {
+    return guideListService.getListsByGuideId(guideId);
+  }
 }

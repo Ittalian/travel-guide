@@ -8,12 +8,10 @@ class GuideListViewModel extends ChangeNotifier {
   List<GuideList> _lists = [];
   List<GuideList> get lists => _lists;
 
-  GuideListViewModel(this.guideListRepository) {
-    fetchLists();
-  }
+  GuideListViewModel(this.guideListRepository);
 
-  void fetchLists() {
-    guideListRepository.getLists().listen((listList) {
+  void fetchLists(String guideId) {
+    guideListRepository.getSchedulesByGuideId(guideId).listen((listList) {
       _lists = listList;
       notifyListeners();
     });
