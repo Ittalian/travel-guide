@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_guide/config/routes.dart';
+import 'package:travel_guide/view_models/guide_list_view_model.dart';
+import 'package:travel_guide/view_models/guide_schedule_view_model.dart';
 import 'package:travel_guide/view_models/guide_view_model.dart';
-import 'package:travel_guide/views/guide/guide_view.dart';
 import 'package:travel_guide/widget/base/base_button.dart';
 import 'package:travel_guide/widget/base/base_image_container.dart';
 
@@ -14,9 +15,15 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  void browseGuide(String guideId) {
+    Navigator.pushNamed(context, Routes.browse, arguments: guideId);
+  }
+
   @override
   Widget build(BuildContext context) {
     final guideViewModel = context.watch<GuideViewModel>();
+    final guideScheduleViewModel = context.watch<GuideScheduleViewModel>();
+    final guideListViewModel = context.watch<GuideListViewModel>();
     return BaseImageContainer(
         imagePath: 'images/home_background.jpg',
         child: Scaffold(
@@ -27,7 +34,7 @@ class _HomeState extends State<Home> {
               const Padding(padding: EdgeInsets.only(top: 200)),
               for (var guide in guideViewModel.guides)
                 GestureDetector(
-                    onTap: () => GuideView(),
+                    onTap: () => browseGuide(guide.guideId!),
                     child: Container(
                       alignment: Alignment.topCenter,
                       padding: const EdgeInsets.all(10),
@@ -42,7 +49,16 @@ class _HomeState extends State<Home> {
                             Row(children: [
                               BaseButton(buttonText: '共有', onPressed: () {}),
                               const Padding(padding: EdgeInsets.only(left: 5)),
-                              BaseButton(buttonText: '削除', onPressed: () {})
+                              BaseButton(
+                                  buttonText: '削除',
+                                  onPressed: () async {
+                                    await guideListViewModel
+                                        .deleteList(guide.guideId!);
+                                    await guideScheduleViewModel
+                                        .deleteSchedule(guide.guideId!);
+                                    await guideViewModel
+                                        .deleteGuide(guide.guideId!);
+                                  })
                             ])
                           ]),
                     )),

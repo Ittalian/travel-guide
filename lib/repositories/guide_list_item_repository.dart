@@ -13,4 +13,8 @@ class GuideListItemRepository {
   Future<void> addListItem(GuideListItem item) {
     return guideListItemService.addGuideListItem(item);
   }
+
+  deleteListItem(String listItemId) {
+    guideListItemService.deleteListItem(listItemId);
+  }
 }

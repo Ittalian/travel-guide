@@ -17,4 +17,8 @@ class GuideListRepository {
   Stream<List<GuideList>> getSchedulesByGuideId(String guideId) {
     return guideListService.getListsByGuideId(guideId);
   }
+
+  deleteList(String guideId) {
+    guideListService.deleteList(guideId);
+  }
 }

@@ -7,14 +7,12 @@ import 'package:travel_guide/widget/guide_schedule/schedule_date_text.dart';
 class ScheduleContainer extends StatefulWidget {
   final TextEditingController? detailController;
   final TextEditingController? dateController;
-  final bool isBrowseMode;
   final String? initDetail;
   final String? initDate;
   const ScheduleContainer({
     super.key,
     this.detailController,
     this.dateController,
-    required this.isBrowseMode,
     this.initDetail,
     this.initDate,
   });

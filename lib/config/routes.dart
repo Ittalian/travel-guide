@@ -11,6 +11,7 @@ class Routes {
   static const String guideHome = '/guide_home';
   static const String schedule = '/schedule';
   static const String list = '/list';
+  static const String browse = '/browse';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -22,14 +23,26 @@ class Routes {
         final guideOption = settings.arguments as Map;
         return MaterialPageRoute(
             builder: (_) => GuideHomeView(
-                isFirstPage: guideOption['isFirstPage'] as bool,
-                guideId: guideOption['guideId'] as String));
+                  isFirstPage: guideOption['isFirstPage'] as bool,
+                  guideId: guideOption['guideId'] as String,
+                  isBrowseMode: false,
+                ));
       case schedule:
         final guideId = settings.arguments as String;
-        return MaterialPageRoute(builder: (_) => GuideScheduleView(guideId: guideId));
+        return MaterialPageRoute(
+            builder: (_) => GuideScheduleView(guideId: guideId));
       case list:
         final guideId = settings.arguments as String;
-        return MaterialPageRoute(builder: (_) => GuideListView(guideId: guideId));
+        return MaterialPageRoute(
+            builder: (_) => GuideListView(guideId: guideId));
+      case browse:
+        final guideId = settings.arguments as String;
+        return MaterialPageRoute(
+            builder: (_) => GuideHomeView(
+                  guideId: guideId,
+                  isFirstPage: false,
+                  isBrowseMode: true,
+                ));
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

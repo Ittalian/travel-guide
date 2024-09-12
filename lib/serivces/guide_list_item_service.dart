@@ -13,4 +13,8 @@ class GuideListItemService {
   Future<void> addGuideListItem(GuideListItem item) {
     return db.add(item.toMap());
   }
+
+  deleteListItem(String listItemId) {
+    db.doc(listItemId).delete();
+  }
 }

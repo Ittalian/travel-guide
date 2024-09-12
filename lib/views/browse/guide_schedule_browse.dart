@@ -16,16 +16,14 @@ class GuideScheduleBrowse extends StatelessWidget {
         imagePath: 'images/schedule_background.jpg',
         child: Container(
             alignment: Alignment.center,
-            margin: const EdgeInsets.only(top: 150),
             child: SingleChildScrollView(
                 child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                  for (var schedule in guideScheduleViewModel.schedules) ... {
+                  for (var schedule in guideScheduleViewModel.schedules) ...{
                     ScheduleContainer(
-                        initDetail: schedule.description,
-                        initDate: schedule.eventDate,
-                        isBrowseMode: true)
+                      initDetail: schedule.description,
+                      initDate: schedule.eventDate,
+                    )
                   }
                 ]))));
   }

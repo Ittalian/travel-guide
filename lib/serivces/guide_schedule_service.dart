@@ -20,4 +20,12 @@ class GuideScheduleService {
             .map((doc) => GuideSchedule.fromMap(doc.data(), doc.id))
             .toList());
   }
+
+  deleteSchedule(String guideId) async {
+    QuerySnapshot snapshot =
+        await db.where('guide_id', isEqualTo: guideId).get();
+    for (var doc in snapshot.docs) {
+      doc.reference.delete();
+    }
+  }
 }

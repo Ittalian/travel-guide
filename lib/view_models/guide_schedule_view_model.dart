@@ -22,4 +22,8 @@ class GuideScheduleViewModel extends ChangeNotifier {
   Future<void> addSchedule(GuideSchedule schedule) async {
     await guideScheduleRepository.addSchdule(schedule);
   }
+
+  Future<void> deleteSchedule(String guideId) async {
+    await guideScheduleRepository.deleteSchedule(guideId);
+  }
 }

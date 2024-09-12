@@ -17,4 +17,8 @@ class GuideScheduleRepository {
   Stream<List<GuideSchedule>> getSchedulesByGuideId(String guideId) {
     return guideScheduleService.getSchedulesByGuideId(guideId);
   }
+
+  deleteSchedule(String guideId) {
+    guideScheduleService.deleteSchedule(guideId);
+  }
 }

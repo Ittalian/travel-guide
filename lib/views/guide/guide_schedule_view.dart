@@ -31,7 +31,6 @@ class GuideScheduleViewState extends State<GuideScheduleView> {
     final container = ScheduleContainer(
       detailController: detailController,
       dateController: dateController,
-      isBrowseMode: false,
     );
 
     setState(() {

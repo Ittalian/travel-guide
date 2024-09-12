@@ -14,4 +14,8 @@ class GuideService {
     DocumentReference ref = await db.add(guide.toMap());
     return ref.id;
   }
+
+  deleteGuide(String guideId) async {
+    db.doc(guideId).delete();
+  }
 }

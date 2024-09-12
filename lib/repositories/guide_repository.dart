@@ -13,4 +13,8 @@ class GuideRepository {
   Future<String> addGuide(Guide guide) {
     return guideService.addGuide(guide);
   }
+
+  deleteGuide(String guideId) {
+    return guideService.deleteGuide(guideId);
+  }
 }

@@ -22,4 +22,8 @@ class GuideListItemViewModel extends ChangeNotifier {
   Future<void> addListItem(GuideListItem item) async {
     await guideListItemRepository.addListItem(item);
   }
+
+  deleteListItem(String listItemId) async {
+    await guideListItemRepository.deleteListItem(listItemId);
+  }
 }
