@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_guide/config/routes.dart';
-import 'package:travel_guide/models/guide_list.dart';
+import 'package:travel_guide/models/guide_list_item.dart';
 import 'package:travel_guide/utils/list/list_data.dart';
-import 'package:travel_guide/view_models/guide_list_view_model.dart';
+import 'package:travel_guide/view_models/guide_list_item_view_model.dart';
 import 'package:travel_guide/widget/base/base_image_container.dart';
 import 'package:travel_guide/widget/guide_list/list_container.dart';
 
-class GuideListView extends StatefulWidget {
+class GuideListItemView extends StatefulWidget {
   final String guideId;
-  const GuideListView({super.key, required this.guideId});
+  final String listId;
+  const GuideListItemView(
+      {super.key, required this.guideId, required this.listId});
 
   @override
-  State<GuideListView> createState() => GuideListViewState();
+  State<GuideListItemView> createState() => GuideListViewState();
 }
 
-class GuideListViewState extends State<GuideListView> {
+class GuideListViewState extends State<GuideListItemView> {
   final List<ListData> listContainers = [];
 
   @override
@@ -37,7 +39,7 @@ class GuideListViewState extends State<GuideListView> {
 
   @override
   Widget build(BuildContext context) {
-    final guideListItemViewModel = context.watch<GuideListViewModel>();
+    final guideListItemViewModel = context.watch<GuideListItemViewModel>();
     return BaseImageContainer(
         imagePath: 'images/list_background.jpg',
         child: Scaffold(
@@ -78,12 +80,12 @@ class GuideListViewState extends State<GuideListView> {
                   child: TextButton(
                       onPressed: () {
                         for (var listContainer in listContainers) {
-                          GuideList guideList = GuideList(
-                              guideId: widget.guideId,
-                              title: listContainer.titleController.text,
+                          GuideListItem listItem = GuideListItem(
+                              listId: widget.listId,
+                              name: listContainer.titleController.text,
                               description:
                                   listContainer.descriptionController.text);
-                          guideListItemViewModel.addList(guideList);
+                          guideListItemViewModel.addListItem(listItem);
                         }
                         Navigator.pushNamed(
                           context,

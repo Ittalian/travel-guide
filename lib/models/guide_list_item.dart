@@ -1,11 +1,11 @@
 class GuideListItem {
-  String listItemId;
+  String? listItemId;
   String listId;
   String name;
   String description;
 
   GuideListItem({
-    required this.listItemId,
+    this.listItemId,
     required this.listId,
     required this.name,
     required this.description,
@@ -16,7 +16,7 @@ class GuideListItem {
     return GuideListItem(
         listItemId: documentId,
         listId: listItemMap['list_id'] ?? '',
-        name: listItemMap['item_name'] ?? '',
+        name: listItemMap['name'] ?? '',
         description: listItemMap['description'] ?? '');
   }
 

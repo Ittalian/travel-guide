@@ -10,11 +10,11 @@ class GuideListItemRepository {
     return guideListItemService.getListItems();
   }
 
-  Future<void> addListItem(GuideListItem item) {
-    return guideListItemService.addGuideListItem(item);
+  Stream<List<GuideListItem>> getListItemsByListId(String listId) {
+    return guideListItemService.getListItemsByListId(listId);
   }
 
-  deleteListItem(String listItemId) {
-    guideListItemService.deleteListItem(listItemId);
+  Future<void> addListItem(GuideListItem item) {
+    return guideListItemService.addGuideListItem(item);
   }
 }

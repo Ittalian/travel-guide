@@ -28,13 +28,17 @@ class Routes {
                   isBrowseMode: false,
                 ));
       case schedule:
-        final guideId = settings.arguments as String;
+        final scheduleOption = settings.arguments as Map;
         return MaterialPageRoute(
-            builder: (_) => GuideScheduleView(guideId: guideId));
+            builder: (_) => GuideScheduleView(
+                guideId: scheduleOption['guideId'] as String,
+                scheduleListId: scheduleOption['scheduleListId'] as String));
       case list:
-        final guideId = settings.arguments as String;
+        final listOptions = settings.arguments as Map;
         return MaterialPageRoute(
-            builder: (_) => GuideListView(guideId: guideId));
+            builder: (_) => GuideListItemView(
+                guideId: listOptions['guideId'] as String,
+                listId: listOptions['listId'] as String));
       case browse:
         final guideId = settings.arguments as String;
         return MaterialPageRoute(

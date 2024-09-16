@@ -17,11 +17,7 @@ class GuideListViewModel extends ChangeNotifier {
     });
   }
 
-  Future<void> addList(GuideList list) async {
-    await guideListRepository.addList(list);
-  }
-
-  Future<void> deleteList(String guideId) async {
-    await guideListRepository.deleteList(guideId);
+  Future<String> addList(GuideList list) async {
+    return await guideListRepository.addList(list);
   }
 }

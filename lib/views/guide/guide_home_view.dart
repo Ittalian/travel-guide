@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_guide/config/routes.dart';
+import 'package:travel_guide/models/guide_list.dart';
+import 'package:travel_guide/models/guide_schedule_list.dart';
 import 'package:travel_guide/view_models/guide_list_view_model.dart';
-import 'package:travel_guide/view_models/guide_schedule_view_model.dart';
+import 'package:travel_guide/view_models/guide_schedule_list_view_model.dart';
 import 'package:travel_guide/views/browse/guide_list_browse.dart';
 import 'package:travel_guide/views/browse/guide_schedule_browse.dart';
 import 'package:travel_guide/widget/base/base_button.dart';
@@ -13,7 +15,10 @@ class GuideHomeView extends StatefulWidget {
   final bool isBrowseMode;
   final String guideId;
   const GuideHomeView(
-      {super.key, required this.isFirstPage, required this.isBrowseMode, required this.guideId});
+      {super.key,
+      required this.isFirstPage,
+      required this.isBrowseMode,
+      required this.guideId});
 
   @override
   GuideHomeViewState createState() => GuideHomeViewState();
@@ -21,92 +26,89 @@ class GuideHomeView extends StatefulWidget {
 
 class GuideHomeViewState extends State<GuideHomeView> {
   String imagePath = 'images/init_background.jpg';
-  late PageController pageController;
   int currentPage = 0;
+  List<Widget> pages = [];
 
-  @override
-  void initState() {
-    super.initState();
-    pageController = PageController(initialPage: 0);
+  void moveSchedulePage(String scheduleListId) {
+    Navigator.pushNamed(context, Routes.schedule, arguments: {
+      'guideId': widget.guideId,
+      'scheduleListId': scheduleListId,
+    });
   }
 
-  @override
-  void dispose() {
-    pageController.dispose();
-    super.dispose();
-  }
-
-  void moveSchedulePage() {
-    Navigator.pushNamed(context, Routes.schedule, arguments: widget.guideId);
-  }
-
-  void moveListPage() {
-    Navigator.pushNamed(context, Routes.list, arguments: widget.guideId);
+  void moveListPage(String listId) {
+    Navigator.pushNamed(context, Routes.list, arguments: {
+      'guideId': widget.guideId,
+      'listId': listId,
+    });
   }
 
   void moveHomePage() {
     Navigator.pushNamed(context, Routes.home);
   }
 
-  void navigateToFirstPage() {
-    pageController.animateToPage(
-      0,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
+  void getGuidePages(GuideScheduleListViewModel scheduleListVewModel,
+      GuideListViewModel listViewModel) {
+    pages.clear();
+    for (var scheduleList in scheduleListVewModel.scheduleLists) {
+      pages.add(
+          GuideScheduleBrowse(scheduleListId: scheduleList.scheduleListId!));
+    }
+    for (var list in listViewModel.lists) {
+      pages.add(GuideListBrowse(listId: list.listId!));
+    }
+  }
+
+  void getInitPage(GuideScheduleListViewModel scheduleListVewModel,
+      GuideListViewModel listViewModel) {
+    pages.add(Container(
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            BaseButton(
+                buttonText: 'スケジュール',
+                onPressed: () async {
+                  String scheduleListId =
+                      await scheduleListVewModel.addScheduleList(
+                          GuideScheduleList(guideId: widget.guideId));
+                  moveSchedulePage(scheduleListId);
+                }),
+            const Padding(padding: EdgeInsets.only(top: 10)),
+            BaseButton(
+                buttonText: 'リスト',
+                onPressed: () async {
+                  String listId = await listViewModel
+                      .addList(GuideList(guideId: widget.guideId));
+                  moveListPage(listId);
+                }),
+            const Padding(padding: EdgeInsets.only(top: 10)),
+            if (!widget.isFirstPage)
+              BaseButton(buttonText: '保存', onPressed: moveHomePage)
+          ],
+        )));
   }
 
   @override
   Widget build(BuildContext context) {
-    final guideScheduleViewModel = context.watch<GuideScheduleViewModel>();
+    final guideScheduleListViewModel =
+        context.watch<GuideScheduleListViewModel>();
     final guideListViewModel = context.watch<GuideListViewModel>();
-    guideScheduleViewModel.fetchSchedules(widget.guideId);
+    guideScheduleListViewModel.fetchScheduleLists(widget.guideId);
     guideListViewModel.fetchLists(widget.guideId);
+
+    getGuidePages(guideScheduleListViewModel, guideListViewModel);
+
+    if (!widget.isBrowseMode) {
+      getInitPage(guideScheduleListViewModel, guideListViewModel);
+    }
+
     return BaseImageContainer(
         imagePath: imagePath,
         child: Scaffold(
             backgroundColor: Colors.white.withOpacity(0),
             body: PageView(
-              children: [
-                Consumer<GuideScheduleViewModel>(
-                  builder: (context, viewModel, child) {
-                    if (viewModel.schedules.isEmpty) {
-                      return const Center(
-                          child: Text('No schedules available'));
-                    }
-                    return GuideScheduleBrowse(guideId: widget.guideId);
-                  },
-                ),
-                Consumer<GuideListViewModel>(
-                  builder: (context, viewModel, child) {
-                    if (viewModel.lists.isEmpty) {
-                      return const Center(
-                          child: Text('No schedules available'));
-                    }
-                    return PageView.builder(
-                      itemCount: viewModel.lists.length,
-                      itemBuilder: (context, index) {
-                        return GuideListBrowse(guideId: widget.guideId);
-                      },
-                    );
-                  },
-                ),
-                if (!widget.isBrowseMode)
-                Container(
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        BaseButton(
-                            buttonText: 'スケジュール', onPressed: moveSchedulePage),
-                        const Padding(padding: EdgeInsets.only(top: 10)),
-                        BaseButton(buttonText: 'リスト', onPressed: moveListPage),
-                        const Padding(padding: EdgeInsets.only(top: 10)),
-                        if (!widget.isFirstPage)
-                          BaseButton(buttonText: '保存', onPressed: moveHomePage)
-                      ],
-                    ))
-              ],
+              children: pages,
             )));
   }
 }

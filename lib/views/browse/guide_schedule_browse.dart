@@ -5,26 +5,24 @@ import 'package:travel_guide/widget/base/base_image_container.dart';
 import 'package:travel_guide/widget/guide_schedule/schedule_container.dart';
 
 class GuideScheduleBrowse extends StatelessWidget {
-  final String guideId;
-  const GuideScheduleBrowse({super.key, required this.guideId});
+  final String scheduleListId;
+  const GuideScheduleBrowse({super.key, required this.scheduleListId});
 
   @override
   Widget build(BuildContext context) {
     final guideScheduleViewModel = context.watch<GuideScheduleViewModel>();
-    guideScheduleViewModel.fetchSchedules(guideId);
+    guideScheduleViewModel.fetchSchedules(scheduleListId);
     return BaseImageContainer(
         imagePath: 'images/schedule_background.jpg',
         child: Container(
             alignment: Alignment.center,
             child: SingleChildScrollView(
-                child: Column(
-                    children: [
-                  for (var schedule in guideScheduleViewModel.schedules) ...{
-                    ScheduleContainer(
-                      initDetail: schedule.description,
-                      initDate: schedule.eventDate,
-                    )
-                  }
-                ]))));
+                child: Column(children: [
+              for (var schedule in guideScheduleViewModel.schedules)
+                ScheduleContainer(
+                  initDetail: schedule.description,
+                  initDate: schedule.eventDate,
+                )
+            ]))));
   }
 }

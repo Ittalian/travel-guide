@@ -10,15 +10,11 @@ class GuideListRepository {
     return guideListService.getLists();
   }
 
-  Future<void> addList(GuideList list) {
+  Future<String> addList(GuideList list) {
     return guideListService.addList(list);
   }
 
   Stream<List<GuideList>> getSchedulesByGuideId(String guideId) {
     return guideListService.getListsByGuideId(guideId);
-  }
-
-  deleteList(String guideId) {
-    guideListService.deleteList(guideId);
   }
 }

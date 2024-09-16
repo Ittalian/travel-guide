@@ -10,11 +10,14 @@ class GuideListItemService {
         .toList());
   }
 
-  Future<void> addGuideListItem(GuideListItem item) {
-    return db.add(item.toMap());
+  Stream<List<GuideListItem>> getListItemsByListId(String listId) {
+    return db.where('list_id', isEqualTo: listId).snapshots().map(
+        (snapshot) => snapshot.docs
+            .map((doc) => GuideListItem.fromMap(doc.data(), doc.id))
+            .toList());
   }
 
-  deleteListItem(String listItemId) {
-    db.doc(listItemId).delete();
+  Future<void> addGuideListItem(GuideListItem item) {
+    return db.add(item.toMap());
   }
 }

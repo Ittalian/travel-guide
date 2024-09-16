@@ -26,9 +26,9 @@ class CreateTitleView extends StatelessWidget {
                 padding: const EdgeInsets.all(5),
                 color: Colors.white.withOpacity(0.8),
                 child: BaseTextformfield(
-                    controller: titleController,
-                    labelText: 'タイトルを入力してください',
-                    isCenter: false,
+                  controller: titleController,
+                  labelText: 'タイトルを入力してください',
+                  isCenter: false,
                 ),
               ),
               const Padding(padding: EdgeInsets.only(top: 50)),

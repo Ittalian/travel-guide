@@ -14,18 +14,10 @@ class GuideScheduleService {
     return db.add(schedule.toMap()).then((ref) => ref.id);
   }
 
-  Stream<List<GuideSchedule>> getSchedulesByGuideId(String guideId) {
-    return db.where('guide_id', isEqualTo: guideId).snapshots().map(
+  Stream<List<GuideSchedule>> getSchedulesByScheduleListId(String scheduleListId) {
+    return db.where('schedule_list_id', isEqualTo: scheduleListId).snapshots().map(
         (snapshot) => snapshot.docs
             .map((doc) => GuideSchedule.fromMap(doc.data(), doc.id))
             .toList());
-  }
-
-  deleteSchedule(String guideId) async {
-    QuerySnapshot snapshot =
-        await db.where('guide_id', isEqualTo: guideId).get();
-    for (var doc in snapshot.docs) {
-      doc.reference.delete();
-    }
   }
 }

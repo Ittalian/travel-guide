@@ -10,9 +10,9 @@ class GuideScheduleViewModel extends ChangeNotifier {
 
   GuideScheduleViewModel(this.guideScheduleRepository);
 
-  void fetchSchedules(String guideId) {
+  void fetchSchedules(String schduleListId) {
     guideScheduleRepository
-        .getSchedulesByGuideId(guideId)
+        .getSchedulesByGuideId(schduleListId)
         .listen((scheduleList) {
       _schedules = scheduleList;
       notifyListeners();
@@ -21,9 +21,5 @@ class GuideScheduleViewModel extends ChangeNotifier {
 
   Future<void> addSchedule(GuideSchedule schedule) async {
     await guideScheduleRepository.addSchdule(schedule);
-  }
-
-  Future<void> deleteSchedule(String guideId) async {
-    await guideScheduleRepository.deleteSchedule(guideId);
   }
 }

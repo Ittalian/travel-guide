@@ -1,14 +1,12 @@
 class GuideSchedule {
   final String? scheduleId;
-  final String guideId;
-  final num scheduleDate;
+  final String scheduleListId;
   final String eventDate;
   final String description;
 
   GuideSchedule({
     this.scheduleId,
-    required this.guideId,
-    required this.scheduleDate,
+    required this.scheduleListId,
     required this.eventDate,
     required this.description,
   });
@@ -17,8 +15,7 @@ class GuideSchedule {
       Map<String, dynamic> scheduleMap, String documentId) {
     return GuideSchedule(
       scheduleId: documentId,
-      guideId: scheduleMap['guide_id'] ?? '',
-      scheduleDate: scheduleMap['schedule_date'] ?? '',
+      scheduleListId: scheduleMap['schedule_list_id'] ?? '',
       eventDate: scheduleMap['event_date'] ?? '',
       description: scheduleMap['description'] ?? '',
     );
@@ -26,8 +23,7 @@ class GuideSchedule {
 
   Map<String, dynamic> toMap() {
     return {
-      'guide_id': guideId,
-      'schedule_date': scheduleDate,
+      'schedule_list_id': scheduleListId,
       'event_date': eventDate,
       'description': description,
     };
