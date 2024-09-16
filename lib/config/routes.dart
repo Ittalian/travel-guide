@@ -36,7 +36,7 @@ class Routes {
       case list:
         final listOptions = settings.arguments as Map;
         return MaterialPageRoute(
-            builder: (_) => GuideListItemView(
+            builder: (_) => GuideListView(
                 guideId: listOptions['guideId'] as String,
                 listId: listOptions['listId'] as String));
       case browse:

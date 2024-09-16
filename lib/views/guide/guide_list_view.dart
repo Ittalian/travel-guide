@@ -7,17 +7,17 @@ import 'package:travel_guide/view_models/guide_list_item_view_model.dart';
 import 'package:travel_guide/widget/base/base_image_container.dart';
 import 'package:travel_guide/widget/guide_list/list_container.dart';
 
-class GuideListItemView extends StatefulWidget {
+class GuideListView extends StatefulWidget {
   final String guideId;
   final String listId;
-  const GuideListItemView(
+  const GuideListView(
       {super.key, required this.guideId, required this.listId});
 
   @override
-  State<GuideListItemView> createState() => GuideListViewState();
+  State<GuideListView> createState() => GuideListViewState();
 }
 
-class GuideListViewState extends State<GuideListItemView> {
+class GuideListViewState extends State<GuideListView> {
   final List<ListData> listContainers = [];
 
   @override

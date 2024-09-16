@@ -43,7 +43,16 @@ class _HomeState extends State<Home> {
                               style: const TextStyle(fontSize: 20),
                             ),
                             Row(children: [
-                              BaseButton(buttonText: '共有', onPressed: () {}),
+                              BaseButton(
+                                  buttonText: '編集',
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                        context, Routes.guideHome,
+                                        arguments: {
+                                          'isFirstPage': false,
+                                          'guideId': guide.guideId,
+                                        });
+                                  }),
                               const Padding(padding: EdgeInsets.only(left: 5)),
                               BaseButton(
                                   buttonText: '削除',

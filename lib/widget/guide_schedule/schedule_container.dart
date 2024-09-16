@@ -37,9 +37,9 @@ class ScheduleContainerState extends State<ScheduleContainer> {
         children: [
           widget.dateController == null
               ? Container(
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: ScheduleDateText(
-                  containerColor: containerColor, text: widget.initDate!))
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: ScheduleDateText(
+                      containerColor: containerColor, text: widget.initDate!))
               : TextButton(
                   onPressed: () {
                     picker.DatePicker.showTimePicker(context,

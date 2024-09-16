@@ -7,6 +7,8 @@ import 'package:travel_guide/view_models/guide_list_view_model.dart';
 import 'package:travel_guide/view_models/guide_schedule_list_view_model.dart';
 import 'package:travel_guide/views/browse/guide_list_browse.dart';
 import 'package:travel_guide/views/browse/guide_schedule_browse.dart';
+import 'package:travel_guide/views/guide/guide_schedule_view.dart';
+import 'package:travel_guide/views/guide/guide_list_view.dart';
 import 'package:travel_guide/widget/base/base_button.dart';
 import 'package:travel_guide/widget/base/base_image_container.dart';
 
@@ -49,13 +51,22 @@ class GuideHomeViewState extends State<GuideHomeView> {
 
   void getGuidePages(GuideScheduleListViewModel scheduleListVewModel,
       GuideListViewModel listViewModel) {
-    pages.clear();
     for (var scheduleList in scheduleListVewModel.scheduleLists) {
-      pages.add(
-          GuideScheduleBrowse(scheduleListId: scheduleList.scheduleListId!));
+      if (widget.isBrowseMode) {
+        pages.add(
+            GuideScheduleBrowse(scheduleListId: scheduleList.scheduleListId!));
+      } else {
+        pages.add(GuideScheduleView(
+            guideId: widget.guideId,
+            scheduleListId: scheduleList.scheduleListId!));
+      }
     }
     for (var list in listViewModel.lists) {
-      pages.add(GuideListBrowse(listId: list.listId!));
+      if (widget.isBrowseMode) {
+        pages.add(GuideListBrowse(listId: list.listId!));
+      } else {
+        pages.add(GuideListView(guideId: widget.guideId, listId: list.listId!));
+      }
     }
   }
 
@@ -98,7 +109,6 @@ class GuideHomeViewState extends State<GuideHomeView> {
     guideListViewModel.fetchLists(widget.guideId);
 
     getGuidePages(guideScheduleListViewModel, guideListViewModel);
-
     if (!widget.isBrowseMode) {
       getInitPage(guideScheduleListViewModel, guideListViewModel);
     }
