@@ -2,44 +2,57 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_guide/config/routes.dart';
 import 'package:travel_guide/models/guide_list_item.dart';
-import 'package:travel_guide/utils/list/list_data.dart';
 import 'package:travel_guide/view_models/guide_list_item_view_model.dart';
 import 'package:travel_guide/widget/base/base_image_container.dart';
 import 'package:travel_guide/widget/guide_list/list_container.dart';
 
-class GuideListView extends StatefulWidget {
+class GuideListItemView extends StatefulWidget {
   final String guideId;
   final String listId;
-  const GuideListView(
+  const GuideListItemView(
       {super.key, required this.guideId, required this.listId});
 
   @override
-  State<GuideListView> createState() => GuideListViewState();
+  State<GuideListItemView> createState() => GuideListItemViewState();
 }
 
-class GuideListViewState extends State<GuideListView> {
-  final List<ListData> listContainers = [];
+class GuideListItemViewState extends State<GuideListItemView> {
+  final List<ListContainer> listContainers = [];
 
   @override
   void initState() {
     super.initState();
-    addListContainer();
+    final guideListItemViewModel = context.read<GuideListItemViewModel>();
+    guideListItemViewModel.fetchListItems(widget.listId);
+    getListContainer(guideListItemViewModel);
+  }
+
+  void getListContainer(GuideListItemViewModel guideListItemViewModel) {
+    setState(() {
+      for (var list in guideListItemViewModel.listItems) {
+        listContainers.add(ListContainer(
+          initTitle: list.name,
+          initDesciption: list.description,
+        ));
+      }
+    });
   }
 
   void addListContainer() {
     final TextEditingController titleController = TextEditingController();
     final TextEditingController descriptionController = TextEditingController();
 
+    final container = ListContainer(
+        titleController: titleController,
+        descriptionController: descriptionController);
     setState(() {
-      listContainers.add(ListData(
-          titleController: titleController,
-          descriptionController: descriptionController));
+      listContainers.add(container);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final guideListItemViewModel = context.watch<GuideListItemViewModel>();
+    final guideListItemViewModel = context.read<GuideListItemViewModel>();
     return BaseImageContainer(
         imagePath: 'images/list_background.jpg',
         child: Scaffold(
@@ -49,28 +62,7 @@ class GuideListViewState extends State<GuideListView> {
             margin: const EdgeInsets.fromLTRB(15, 50, 15, 0),
             child: SingleChildScrollView(
                 child: Column(children: [
-              for (var i = 0; i < listContainers.length; i += 2)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: ListContainer(
-                        titleController: listContainers[i].titleController,
-                        descriptionController:
-                            listContainers[i].descriptionController,
-                      ),
-                    ),
-                    if (i + 1 < listContainers.length)
-                      Expanded(
-                        child: ListContainer(
-                          titleController:
-                              listContainers[i + 1].titleController,
-                          descriptionController:
-                              listContainers[i + 1].descriptionController,
-                        ),
-                      ),
-                  ],
-                ),
+              ...listContainers,
               const Padding(padding: EdgeInsets.only(top: 30)),
               TextButton(
                   onPressed: addListContainer,
@@ -78,14 +70,17 @@ class GuideListViewState extends State<GuideListView> {
               Container(
                   alignment: Alignment.bottomCenter,
                   child: TextButton(
-                      onPressed: () {
+                      onPressed: () async {
                         for (var listContainer in listContainers) {
-                          GuideListItem listItem = GuideListItem(
-                              listId: widget.listId,
-                              name: listContainer.titleController.text,
-                              description:
-                                  listContainer.descriptionController.text);
-                          guideListItemViewModel.addListItem(listItem);
+                          if (listContainer.titleController != null &&
+                              listContainer.descriptionController != null) {
+                            GuideListItem listItem = GuideListItem(
+                                listId: widget.listId,
+                                name: listContainer.titleController!.text,
+                                description:
+                                    listContainer.descriptionController!.text);
+                            await guideListItemViewModel.addListItem(listItem);
+                          }
                         }
                         Navigator.pushNamed(
                           context,

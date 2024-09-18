@@ -69,7 +69,7 @@ class ScheduleContainerState extends State<ScheduleContainer> {
           ),
           Expanded(
               child: Card(
-                  child: widget.detailController == null
+                  child: widget.initDetail != null
                       ? Container(
                           color: containerColor,
                           child: Text(widget.initDetail!,

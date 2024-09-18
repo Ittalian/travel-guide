@@ -31,6 +31,20 @@ class GuideHomeViewState extends State<GuideHomeView> {
   int currentPage = 0;
   List<Widget> pages = [];
 
+  @override
+  void initState() {
+    super.initState();
+    final guideScheduleListViewModel =
+        context.read<GuideScheduleListViewModel>();
+    final guideListViewModel = context.read<GuideListViewModel>();
+    guideScheduleListViewModel.fetchScheduleLists(widget.guideId);
+    guideListViewModel.fetchLists(widget.guideId);
+    getGuidePages(guideScheduleListViewModel, guideListViewModel);
+    if (!widget.isBrowseMode) {
+      getInitPage(guideScheduleListViewModel, guideListViewModel);
+    }
+  }
+
   void moveSchedulePage(String scheduleListId) {
     Navigator.pushNamed(context, Routes.schedule, arguments: {
       'guideId': widget.guideId,
@@ -65,7 +79,9 @@ class GuideHomeViewState extends State<GuideHomeView> {
       if (widget.isBrowseMode) {
         pages.add(GuideListBrowse(listId: list.listId!));
       } else {
-        pages.add(GuideListView(guideId: widget.guideId, listId: list.listId!));
+        pages.add(GuideListItemView(
+            guideId: widget.guideId,
+            listId: list.listId!));
       }
     }
   }
@@ -102,17 +118,6 @@ class GuideHomeViewState extends State<GuideHomeView> {
 
   @override
   Widget build(BuildContext context) {
-    final guideScheduleListViewModel =
-        context.watch<GuideScheduleListViewModel>();
-    final guideListViewModel = context.watch<GuideListViewModel>();
-    guideScheduleListViewModel.fetchScheduleLists(widget.guideId);
-    guideListViewModel.fetchLists(widget.guideId);
-
-    getGuidePages(guideScheduleListViewModel, guideListViewModel);
-    if (!widget.isBrowseMode) {
-      getInitPage(guideScheduleListViewModel, guideListViewModel);
-    }
-
     return BaseImageContainer(
         imagePath: imagePath,
         child: Scaffold(

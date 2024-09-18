@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_guide/config/routes.dart';
 import 'package:travel_guide/models/guide_schedule.dart';
-import 'package:travel_guide/utils/schedule/schedule_data.dart';
-import 'package:travel_guide/view_models/guide_schedule_list_view_model.dart';
 import 'package:travel_guide/view_models/guide_schedule_view_model.dart';
 import 'package:travel_guide/widget/base/base_image_container.dart';
 import 'package:travel_guide/widget/guide_schedule/schedule_container.dart';
@@ -11,12 +9,10 @@ import 'package:travel_guide/widget/guide_schedule/schedule_container.dart';
 class GuideScheduleView extends StatefulWidget {
   final String guideId;
   final String scheduleListId;
-  final GuideScheduleListViewModel? guideScheduleListViewModel;
   const GuideScheduleView({
     super.key,
     required this.guideId,
     required this.scheduleListId,
-    this.guideScheduleListViewModel,
   });
 
   @override
@@ -24,12 +20,25 @@ class GuideScheduleView extends StatefulWidget {
 }
 
 class GuideScheduleViewState extends State<GuideScheduleView> {
-  final List<ScheduleData> scheduleContainers = [];
+  final List<ScheduleContainer> scheduleContainers = [];
 
   @override
   void initState() {
     super.initState();
-    addScheduleContainer();
+    final guideScheduleViewModel = context.read<GuideScheduleViewModel>();
+    guideScheduleViewModel.fetchSchedules(widget.scheduleListId);
+    getScheduleContainer(guideScheduleViewModel);
+  }
+
+  void getScheduleContainer(GuideScheduleViewModel guideScheduleViewModel) {
+    setState(() {
+      for (var schedule in guideScheduleViewModel.schedules) {
+        scheduleContainers.add(ScheduleContainer(
+          initDate: schedule.eventDate,
+          initDetail: schedule.description,
+        ));
+      }
+    });
   }
 
   void addScheduleContainer() {
@@ -41,18 +50,13 @@ class GuideScheduleViewState extends State<GuideScheduleView> {
       dateController: dateController,
     );
     setState(() {
-      scheduleContainers.add(ScheduleData(
-        detailController: detailController,
-        dateController: dateController,
-        container: container,
-      ));
+      scheduleContainers.add(container);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final scheduleViewModel = context.watch<GuideScheduleViewModel>();
-    scheduleViewModel.fetchSchedules(widget.scheduleListId);
+    final guideScheduleViewModel = context.read<GuideScheduleViewModel>();
     return BaseImageContainer(
         imagePath: 'images/schedule_background.jpg',
         child: PageView(children: [
@@ -63,23 +67,28 @@ class GuideScheduleViewState extends State<GuideScheduleView> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ...scheduleContainers.map((scheduleData) => scheduleData.container),
+                    ...scheduleContainers,
                     TextButton(
                         onPressed: addScheduleContainer,
                         child: const Text('スケジュールを追加')),
                     Container(
                         alignment: Alignment.bottomCenter,
                         child: TextButton(
-                            onPressed: () {
+                            onPressed: () async {
                               for (var scheduleContainer
                                   in scheduleContainers) {
-                                GuideSchedule schedule = GuideSchedule(
-                                    scheduleListId: widget.scheduleListId,
-                                    eventDate: scheduleContainer
-                                        .container.dateController!.text,
-                                    description: scheduleContainer
-                                        .container.detailController!.text);
-                                scheduleViewModel.addSchedule(schedule);
+                                if (scheduleContainer.dateController != null &&
+                                    scheduleContainer.detailController !=
+                                        null) {
+                                  GuideSchedule schedule = GuideSchedule(
+                                      scheduleListId: widget.scheduleListId,
+                                      eventDate: scheduleContainer
+                                          .dateController!.text,
+                                      description: scheduleContainer
+                                          .detailController!.text);
+                                  await guideScheduleViewModel
+                                      .addSchedule(schedule);
+                                }
                               }
                               Navigator.pushNamed(
                                 context,

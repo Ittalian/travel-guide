@@ -25,12 +25,12 @@ class ListContainerState extends State<ListContainer> {
     return Container(
       color: const Color.fromARGB(255, 146, 210, 100),
       margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+      padding: const EdgeInsets.fromLTRB(100, 10, 100, 10),
       child: Column(
         children: [
           Container(
               padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: widget.titleController == null
+              child: widget.initTitle != null
                   ? ListBrowseText(text: widget.initTitle!, fontSize: 25)
                   : BaseTextformfield(
                       controller: widget.titleController!,
@@ -39,7 +39,7 @@ class ListContainerState extends State<ListContainer> {
                       fontSize: 25)),
           Container(
               padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-              child: widget.descriptionController == null
+              child: widget.initDesciption != null
                   ? ListBrowseText(text: widget.initDesciption!, fontSize: 20)
                   : BaseTextformfield(
                       controller: widget.descriptionController!,
