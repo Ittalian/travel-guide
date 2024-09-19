@@ -25,7 +25,7 @@ class ListContainerState extends State<ListContainer> {
     return Container(
       color: const Color.fromARGB(255, 146, 210, 100),
       margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.fromLTRB(100, 10, 100, 10),
+      padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
       child: Column(
         children: [
           Container(

@@ -16,11 +16,14 @@ class GuideHomeView extends StatefulWidget {
   final bool isFirstPage;
   final bool isBrowseMode;
   final String guideId;
-  const GuideHomeView(
-      {super.key,
-      required this.isFirstPage,
-      required this.isBrowseMode,
-      required this.guideId});
+  final List<Widget>? pages;
+  const GuideHomeView({
+    super.key,
+    required this.isFirstPage,
+    required this.isBrowseMode,
+    required this.guideId,
+    this.pages,
+  });
 
   @override
   GuideHomeViewState createState() => GuideHomeViewState();
@@ -28,21 +31,34 @@ class GuideHomeView extends StatefulWidget {
 
 class GuideHomeViewState extends State<GuideHomeView> {
   String imagePath = 'images/init_background.jpg';
-  int currentPage = 0;
   List<Widget> pages = [];
+  // bool isInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    final guideScheduleListViewModel =
-        context.read<GuideScheduleListViewModel>();
-    final guideListViewModel = context.read<GuideListViewModel>();
-    guideScheduleListViewModel.fetchScheduleLists(widget.guideId);
-    guideListViewModel.fetchLists(widget.guideId);
-    getGuidePages(guideScheduleListViewModel, guideListViewModel);
-    if (!widget.isBrowseMode) {
-      getInitPage(guideScheduleListViewModel, guideListViewModel);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      initializedata();
+    });
+  }
+
+  Future<void> initializedata() async {
+    setState(() {
+      pages = widget.pages!;
+    });
+    //   final guideScheduleListViewModel =
+    //       context.read<GuideScheduleListViewModel>();
+    //   final guideListViewModel = context.read<GuideListViewModel>();
+    //   await guideScheduleListViewModel.fetchScheduleLists(widget.guideId);
+    //   await guideListViewModel.fetchLists(widget.guideId);
+
+    //   setState(() {
+    //     getGuidePages(guideScheduleListViewModel, guideListViewModel);
+    //     if (!widget.isBrowseMode) {
+    //       getInitPage(guideScheduleListViewModel, guideListViewModel);
+    //     }
+    //     isInitialized = true;
+    //   });
   }
 
   void moveSchedulePage(String scheduleListId) {
@@ -63,58 +79,58 @@ class GuideHomeViewState extends State<GuideHomeView> {
     Navigator.pushNamed(context, Routes.home);
   }
 
-  void getGuidePages(GuideScheduleListViewModel scheduleListVewModel,
-      GuideListViewModel listViewModel) {
-    for (var scheduleList in scheduleListVewModel.scheduleLists) {
-      if (widget.isBrowseMode) {
-        pages.add(
-            GuideScheduleBrowse(scheduleListId: scheduleList.scheduleListId!));
-      } else {
-        pages.add(GuideScheduleView(
-            guideId: widget.guideId,
-            scheduleListId: scheduleList.scheduleListId!));
-      }
-    }
-    for (var list in listViewModel.lists) {
-      if (widget.isBrowseMode) {
-        pages.add(GuideListBrowse(listId: list.listId!));
-      } else {
-        pages.add(GuideListItemView(
-            guideId: widget.guideId,
-            listId: list.listId!));
-      }
-    }
-  }
+  // void getGuidePages(GuideScheduleListViewModel scheduleListVewModel,
+  //     GuideListViewModel listViewModel) {
+  //   pages.clear();
+  //   for (var scheduleList in scheduleListVewModel.scheduleLists) {
+  //     if (widget.isBrowseMode) {
+  //       pages.add(
+  //           GuideScheduleBrowse(scheduleListId: scheduleList.scheduleListId!));
+  //     } else {
+  //       pages.add(GuideScheduleView(
+  //           guideId: widget.guideId,
+  //           scheduleListId: scheduleList.scheduleListId!));
+  //     }
+  //   }
+  //   for (var list in listViewModel.lists) {
+  //     if (widget.isBrowseMode) {
+  //       pages.add(GuideListBrowse(listId: list.listId!));
+  //     } else {
+  //       pages.add(
+  //           GuideListItemView(guideId: widget.guideId, listId: list.listId!));
+  //     }
+  //   }
+  // }
 
-  void getInitPage(GuideScheduleListViewModel scheduleListVewModel,
-      GuideListViewModel listViewModel) {
-    pages.add(Container(
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            BaseButton(
-                buttonText: 'スケジュール',
-                onPressed: () async {
-                  String scheduleListId =
-                      await scheduleListVewModel.addScheduleList(
-                          GuideScheduleList(guideId: widget.guideId));
-                  moveSchedulePage(scheduleListId);
-                }),
-            const Padding(padding: EdgeInsets.only(top: 10)),
-            BaseButton(
-                buttonText: 'リスト',
-                onPressed: () async {
-                  String listId = await listViewModel
-                      .addList(GuideList(guideId: widget.guideId));
-                  moveListPage(listId);
-                }),
-            const Padding(padding: EdgeInsets.only(top: 10)),
-            if (!widget.isFirstPage)
-              BaseButton(buttonText: '保存', onPressed: moveHomePage)
-          ],
-        )));
-  }
+  // void getInitPage(GuideScheduleListViewModel scheduleListVewModel,
+  //     GuideListViewModel listViewModel) {
+  //   pages.add(Container(
+  //       alignment: Alignment.center,
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         children: [
+  //           BaseButton(
+  //               buttonText: 'スケジュール',
+  //               onPressed: () async {
+  //                 String scheduleListId =
+  //                     await scheduleListVewModel.addScheduleList(
+  //                         GuideScheduleList(guideId: widget.guideId));
+  //                 moveSchedulePage(scheduleListId);
+  //               }),
+  //           const Padding(padding: EdgeInsets.only(top: 10)),
+  //           BaseButton(
+  //               buttonText: 'リスト',
+  //               onPressed: () async {
+  //                 String listId = await listViewModel
+  //                     .addList(GuideList(guideId: widget.guideId));
+  //                 moveListPage(listId);
+  //               }),
+  //           const Padding(padding: EdgeInsets.only(top: 10)),
+  //           if (!widget.isFirstPage)
+  //             BaseButton(buttonText: '保存', onPressed: moveHomePage)
+  //         ],
+  //       )));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -122,8 +138,6 @@ class GuideHomeViewState extends State<GuideHomeView> {
         imagePath: imagePath,
         child: Scaffold(
             backgroundColor: Colors.white.withOpacity(0),
-            body: PageView(
-              children: pages,
-            )));
+            body: PageView(children: pages)));
   }
 }

@@ -26,6 +26,7 @@ class Routes {
                   isFirstPage: guideOption['isFirstPage'] as bool,
                   guideId: guideOption['guideId'] as String,
                   isBrowseMode: false,
+                  pages: guideOption['pages'] as List<Widget>
                 ));
       case schedule:
         final scheduleOption = settings.arguments as Map;

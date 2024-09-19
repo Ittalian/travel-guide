@@ -15,7 +15,7 @@ class GuideListService {
   }
 
   Stream<List<GuideList>> getListsByGuideId(String guideId) {
-    return db.where('guide_id', isEqualTo: guideId).snapshots().map(
+    return db.where('guide_id', isEqualTo: guideId).orderBy('created_time', descending: false).snapshots().map(
         (snapshot) => snapshot.docs
             .map((doc) => GuideList.fromMap(doc.data(), doc.id))
             .toList());

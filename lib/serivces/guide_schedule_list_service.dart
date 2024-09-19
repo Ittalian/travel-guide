@@ -5,7 +5,7 @@ class GuideScheduleListService {
   final db = FirebaseFirestore.instance.collection('ScheduleList');
 
   Stream<List<GuideScheduleList>> getScheduleListByGuideId(String guideId) {
-    return db.where('guide_id', isEqualTo: guideId).snapshots().map(
+    return db.where('guide_id', isEqualTo: guideId).orderBy('created_time', descending: false).snapshots().map(
         (snapshot) => snapshot.docs
             .map((doc) => GuideScheduleList.fromMap(doc.data(), doc.id))
             .toList());
